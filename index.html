@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<ul id = "list"></ul>
+
+<form id = "newListingForm">
+  <label for="newitem">Item Name:</label><br>
+  <input type="text" id="newitem" name="newitem"><br>
+  <input type="submit" value="Submit">
+</form> 
+
+<script>
+function render() {
+    fetch("http://localhost:8000/entries", {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+
+        for (const [index, itemName] of data.entries()) {
+            // let new_li = document.createElement("li");
+            // let new_link = document.createElement("a");
+            // new_link.href = `http://localhost:8000/listing/${index}`;
+            // new_link.textContent = itemName;
+            // new_li.appendChild(new_link);
+            // document.getElementById("list").appendChild(new_li);
+            document.getElementById("list").insertAdjacentHTML(
+                "beforeend",
+                `<li><a href="http://localhost:8000/listing/${index}">${itemName}</a></li>`
+            )
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+
+document.getElementById("newListingForm").onsubmit = function() {
+    fetch("http://localhost:8000/submitNewListing", {
+        method: 'POST',
+        body: document.getElementById("newitem").value
+    })
+    .then(render())
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+render();
+</script> 
+
+</body>
+</html>

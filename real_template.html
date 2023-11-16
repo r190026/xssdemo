@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<header>Please login to view {{ listing_name }}</header>
+
+<form id="loginForm">
+  <label for="uname">Username:</label><br>
+  <input type="text" id="uname" name="uname"><br>
+  <label for="pword">Password (not masked for sake of demo):</label><br>
+  <input type="text" id="pword" name="pword"><br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+<script>
+document.getElementById("loginForm").onsubmit = function(e) {
+    e.preventDefault();
+    fetch("http://localhost:8000/submit_login", {
+        method: 'POST',
+        body: JSON.stringify({
+            "username": document.getElementById("uname").value,
+            "password": document.getElementById("pword").value
+        }),
+        headers: {
+          'Content-Type':'application/json'
+        }
+    })
+    .then(
+        document.getElementById("loginForm").reset()
+    )
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+</script> 
+
+</body>
+</html>
